@@ -16,7 +16,35 @@ class App extends Component {
   componentDidMount() {
     fetch('https://jsonplaceholder.typicode.com/posts?_limit=10')
       .then((response) => response.json())
-      .then((data) => this.setState({ todos: [...data] }));
+      .then((data) => this.setState({ todos: [...data] }))
+      .catch(error => {
+        console.log(error);
+
+        return this.setState({
+          todos: [
+            {
+              id: 1,
+              title: 'Build a React Application ',
+              complete: false
+            },
+            {
+              id: 2,
+              title: 'Read My Grail Message ',
+              complete: false
+            },
+            {
+              id: 3,
+              title: 'Watch Rayner Teo Videos on Trading',
+              complete: false
+            },
+            {
+              id: 4,
+              title: 'Watch TraversyMedia Videos on MongoDB and MySql and Sql',
+              complete: false
+            }
+          ]
+        })
+      });
   }
 
   markComplete = (id) => {
@@ -41,7 +69,19 @@ class App extends Component {
             return todo.id !== id;
           })
         ]
-      })).catch(error => console.log(error));
+      })).catch(error => {
+        console.log(error)
+        return this.setState({
+          todos: [
+            ...this.state.todos.filter((todo) => {
+              return todo.id !== id;
+            })
+          ]
+        })
+
+      }
+
+      );
     // this.setState({
     //   todos: [
     //     ...this.state.todos.filter((todo) => {
@@ -53,19 +93,6 @@ class App extends Component {
   }
   addTodos = (title) => {
 
-    // function RandomId() {
-    //   let n = 100;
-    //   let m = 0;
-    //   let id = Math.floor(Math.random() * (n - m));
-    //   return id = id + 40;
-    // }
-
-    // let newId = RandomId();
-    // let NewTodo = {
-    //   id: newId,
-    //   title,
-    //   completed: false,
-    // }
     fetch('https://jsonplaceholder.typicode.com/posts', {
       method: 'POST',
       body: JSON.stringify({
@@ -81,6 +108,27 @@ class App extends Component {
         return this.setState({
           todos: [
             ...this.state.todos, NewItem
+          ]
+        })
+      })
+      .catch(error => {
+        function RandomId() {
+          let n = 100;
+          let m = 0;
+          let id = Math.floor(Math.random() * (n - m));
+          return id = id + 40;
+        }
+
+        let newId = RandomId();
+        let NewTodo = {
+          id: newId,
+          title,
+          completed: false,
+        }
+        console.log(error);
+        return this.setState({
+          todos: [
+            ...this.state.todos, NewTodo
           ]
         })
       });
